@@ -32,13 +32,15 @@ if ($user) {
         $token = array(
             "name" => $user['fullname'],
             "email" => $user['email'],
-            "role" => $user['role']
+            "role" => $user['role'],
         );
 
-        $sql = "SELECT  u.fullname, u.email, u.address, u.phone, u.avatar 
+        $sql1 = "SELECT  u.fullname, u.email, u.avatar 
             FROM users u WHERE email = '$email'";
-        $user = executeResult($sql, true);
+        $user = executeResult($sql1, true);
 
+        $sql2 = "SELECT * FROM addresses WHERE id_user = (SELECT id FROM users u WHERE u.email = '$email')";
+        $addresses = executeResult($sql2);
 
         // Mã hóa token
         $access_token = JWT::encode($token, $MY_SECRET_KEY);
@@ -47,7 +49,8 @@ if ($user) {
         http_response_code(200);
         echo json_encode(array(
             'access_token' => $access_token,
-            'user' => $user
+            'user' => $user,
+            'addresses' => $addresses
         ));
         // echo json_encode($user);
     } else {
