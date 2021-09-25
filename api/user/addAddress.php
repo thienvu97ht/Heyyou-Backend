@@ -15,6 +15,8 @@ cors();
 use Firebase\JWT\JWT;
 
 $data = json_decode(file_get_contents("php://input"));
+$address = $data->address;
+$fullname = $data->fullname;
 $phone = $data->phone;
 
 // Lấy token từ header
@@ -26,17 +28,24 @@ if ($access_token) {
         // Giải mã token
         $decoded = JWT::decode($access_token, $MY_SECRET_KEY, array('HS256'));
         http_response_code(200);
-        $username = $decoded->username;
+        $id = $decoded->id;
+        $email = $decoded->email;
 
         if ($decoded) {
-            $sql = "UPDATE users
-            SET phone = '$phone'
-            WHERE username = '$username'";
+            $sql1 = "INSERT INTO addresses(id_user,address,phone,fullname) VALUES ('$id','$address','$phone','$fullname')";
 
-            execute($sql);
+            execute($sql1);
+
+            $sql2 = "SELECT  u.fullname, u.email, u.avatar 
+            FROM users u WHERE email = '$email'";
+            $user = executeResult($sql2, true);
+
+            $sql3 = "SELECT * FROM addresses WHERE id_user = (SELECT id FROM users u WHERE u.email = '$email')";
+            $addresses = executeResult($sql3);
 
             echo json_encode(array(
-                'message' => "Success"
+                'user' => $user,
+                'addresses' => $addresses
             ));
         } else {
             echo json_encode(array(

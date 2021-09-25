@@ -30,6 +30,7 @@ if ($user) {
     if ($is_password_valid) {
         // Tạo token khi đăng nhập thành công
         $token = array(
+            "id" => $user['id'],
             "name" => $user['fullname'],
             "email" => $user['email'],
             "role" => $user['role'],
