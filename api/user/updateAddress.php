@@ -29,16 +29,24 @@ if ($access_token) {
         // Giải mã token
         $decoded = JWT::decode($access_token, $MY_SECRET_KEY, array('HS256'));
         http_response_code(200);
+        $email = $decoded->email;
 
         if ($decoded) {
-            $sql = "UPDATE users
-            SET address = '$address'
-            WHERE id = '$id'";
+            $sql1 = "UPDATE `addresses` SET `address` = '$address', `phone` = '$phone', `fullname` = '$fullname' 
+            WHERE `addresses`.`id` = $id";
 
-            execute($sql);
+            execute($sql1);
+
+            $sql2 = "SELECT  u.fullname, u.email, u.avatar 
+            FROM users u WHERE email = '$email'";
+            $user = executeResult($sql2, true);
+
+            $sql3 = "SELECT * FROM addresses WHERE id_user = (SELECT id FROM users u WHERE u.email = '$email')";
+            $addresses = executeResult($sql3);
 
             echo json_encode(array(
-                'message' => "Success"
+                'user' => $user,
+                'addresses' => $addresses
             ));
         } else {
             echo json_encode(array(
