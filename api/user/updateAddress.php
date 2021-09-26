@@ -15,7 +15,10 @@ cors();
 use Firebase\JWT\JWT;
 
 $data = json_decode(file_get_contents("php://input"));
+$id = $data->id;
 $address = $data->address;
+$fullname = $data->fullname;
+$phone = $data->phone;
 
 // Lấy token từ header
 $access_token = getBearerToken();
@@ -26,12 +29,11 @@ if ($access_token) {
         // Giải mã token
         $decoded = JWT::decode($access_token, $MY_SECRET_KEY, array('HS256'));
         http_response_code(200);
-        $username = $decoded->username;
 
         if ($decoded) {
             $sql = "UPDATE users
             SET address = '$address'
-            WHERE username = '$username'";
+            WHERE id = '$id'";
 
             execute($sql);
 

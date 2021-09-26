@@ -100,6 +100,7 @@ CREATE TABLE addresses (
     id_user INT NOT NULL,
    	address VARCHAR(2500) DEFAULT null,
     phone VARCHAR(13) DEFAULT null,
+    fullname VARCHAR(150) DEFAULT null,
     FOREIGN KEY (id_user) REFERENCES users(id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );

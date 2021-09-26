@@ -15,10 +15,7 @@ cors();
 use Firebase\JWT\JWT;
 
 $data = json_decode(file_get_contents("php://input"));
-$phone = $data->phone;
-$fullname = $data->fullname;
-$address = $data->address;
-$avatar = $data->avatar;
+$id = $data->id;
 
 // Lấy token từ header
 $access_token = getBearerToken();
@@ -29,20 +26,24 @@ if ($access_token) {
         // Giải mã token
         $decoded = JWT::decode($access_token, $MY_SECRET_KEY, array('HS256'));
         http_response_code(200);
-        $username = $decoded->username;
+        $email = $decoded->email;
 
         if ($decoded) {
-            $sql = "UPDATE users
-            SET phone = '$phone', fullname = '$fullname', 
-            address = '$address', avatar = '$avatar'
-            WHERE username = '$username'";
+            $sql1 = "DELETE FROM addresses WHERE addresses.id = $id";
 
-            execute($sql);
+            execute($sql1);
 
-            $sql = "SELECT u.username, u.fullname, u.email, u.address, u.phone, u.avatar 
-            FROM users u WHERE username = '$username'";
-            $user = executeResult($sql, true);
-            echo json_encode($user);
+            $sql2 = "SELECT  u.fullname, u.email, u.avatar 
+            FROM users u WHERE email = '$email'";
+            $user = executeResult($sql2, true);
+
+            $sql3 = "SELECT * FROM addresses WHERE id_user = (SELECT id FROM users u WHERE u.email = '$email')";
+            $addresses = executeResult($sql3);
+
+            echo json_encode(array(
+                'user' => $user,
+                'addresses' => $addresses
+            ));
         } else {
             echo json_encode(array(
                 'message' => "Access denied"
