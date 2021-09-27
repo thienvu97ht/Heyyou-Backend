@@ -117,7 +117,7 @@ if ($user) {
             http_response_code(200);
             $res = [
                 'status' => 1,
-                'message' => "Send Email success"
+                'message' => "Gửi email thành công!"
             ];
             echo json_encode($res);
         }
@@ -133,7 +133,7 @@ if ($user) {
         http_response_code(200);
         $res = [
             'status' => 1,
-            'message' => "Send Email success"
+            'message' => "Gửi email thành công!"
         ];
         echo json_encode($res);
     }

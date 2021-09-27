@@ -26,13 +26,13 @@ if ($access_token) {
         // Giải mã token
         $decoded = JWT::decode($access_token, $MY_SECRET_KEY, array('HS256'));
         http_response_code(200);
-        $username = $decoded->username;
+        $email = $decoded->email;
         $hash_password = password_hash($password, PASSWORD_BCRYPT);
 
         if ($decoded) {
             $sql = "UPDATE users
             SET  hash_password= '$hash_password'
-            WHERE username = '$username'";
+            WHERE email = '$email'";
 
             execute($sql);
 
