@@ -25,27 +25,30 @@ if ($access_token) {
         // Giải mã token
         $decoded = JWT::decode($access_token, $MY_SECRET_KEY, array('HS256'));
         http_response_code(200);
-        $username = $decoded->username;
+        $email = $decoded->email;
 
         if ($decoded) {
-            $sql = "SELECT id FROM bills
-            WHERE id_user = (SELECT id from users WHERE username = '$username')
+            $sql2 = "SELECT * FROM bills
+            WHERE id_user = (SELECT id from users WHERE email = '$email')
             ORDER BY created_at desc";
 
-            $listIdBill = executeResult($sql);
+            $listBill = executeResult($sql2);
 
-            $listBill = [];
-            for ($i = 0; $i < count($listIdBill); $i++) {
-                $idBill = $listIdBill[$i]['id'];
-                $sql = "SELECT ct.id_bill, ct.quantity, sp.price, sp.name, sp.images 
+            $billDetail = [];
+            for ($i = 0; $i < count($listBill); $i++) {
+                $idBill = $listBill[$i]['id'];
+                $sql3 = "SELECT ct.id_bill, ct.id_product, ct.quantity, sp.name
                 FROM bill_detail ct JOIN products sp ON ct.id_product = sp.id
                 WHERE id_bill = $idBill";
 
-                $data = executeResult($sql);
-                array_push($listBill, $data);
+                $data = executeResult($sql3);
+                array_push($billDetail, $data);
             }
 
-            echo json_encode($listBill);
+            echo json_encode(array(
+                'listBill' => $listBill,
+                'billDetail' => $billDetail,
+            ));
         } else {
             echo json_encode(array(
                 'message' => "Access denied"

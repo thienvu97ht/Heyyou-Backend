@@ -20,8 +20,13 @@ CREATE TABLE users (
 CREATE TABLE bills (
     id INT PRIMARY KEY NOT NULL,
     id_user INT NOT NULL,
+    id_address INT NOT NULL,
+    note VARCHAR(1000) DEFAULT NULL,
+    total INT DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT now(),
     FOREIGN KEY (id_user) REFERENCES users(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (id_address) REFERENCES addresses(id)
     ON DELETE CASCADE ON UPDATE CASCADE
 );
 
