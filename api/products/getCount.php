@@ -18,11 +18,13 @@ $data = json_decode(file_get_contents("php://input"));
 $start = $_GET["_start"];
 $limit = $_GET["_limit"];
 $category = $_GET["_category"];
+$search = $_GET["_search"];
 
 // Đếm số lượng sản phẩm
 if ($category === 'allitems') {
     $sql = "SELECT COUNT(*) AS total
-    FROM products JOIN categories on products.id_loai = categories.id";
+    FROM products JOIN categories on products.id_loai = categories.id
+    WHERE products.name LIKE '%$search%'";
 
     $result = executeResult($sql, true);
     echo json_encode($result);

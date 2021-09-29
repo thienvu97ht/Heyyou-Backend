@@ -19,6 +19,7 @@ $start = $_GET["_start"];
 $limit = $_GET["_limit"];
 $category = $_GET["_category"];
 $sort = $_GET["_sort"];
+$search = $_GET["_search"];
 
 $sortArr = explode(":", $sort);
 $sortBy = $sortArr[0];
@@ -29,6 +30,7 @@ if ($category === 'allitems') {
     products.sold, products.name as nameProduct, products.thumbnail, products.content, 
     categories.name as nameCategory, products.created_at
     FROM products JOIN categories on products.id_loai = categories.id
+    WHERE products.name LIKE '%$search%'
     ORDER BY products.$sortBy $order LIMIT $start, $limit";
 
     $productList = executeResult($sql);

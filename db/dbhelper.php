@@ -1,13 +1,18 @@
 <?php
-require_once 'config.php';
+// require_once 'config.php';
 
 /**
  * Su dung voi cau lenh query: insert, update, delete -> ko tra ve ket qua.
  */
 function execute($sql)
 {
+    $severname = "127.0.0.1:3308";
+    $username = "root";
+    $pass = "";
+    $dbname = "shopbee";
+
     //Mo ket noi toi database
-    $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
+    $conn = mysqli_connect($severname, $username, $pass, $dbname);
     mysqli_set_charset($conn, 'utf8');
 
     //Xu ly cau query
@@ -22,8 +27,13 @@ function execute($sql)
  */
 function executeResult($sql, $isSingleRecord = false)
 {
+    $severname = "127.0.0.1:3308";
+    $username = "root";
+    $pass = "";
+    $dbname = "shopbee";
+
     //Mo ket noi toi database
-    $conn = mysqli_connect(HOST, USERNAME, PASSWORD, DATABASE);
+    $conn = mysqli_connect($severname, $username, $pass, $dbname);
     mysqli_set_charset($conn, 'utf8');
 
     // echo $sql;
